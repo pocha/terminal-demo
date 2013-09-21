@@ -1,4 +1,3 @@
-$('#execute').attr("disabled",true);
 
 var Client = function(){
 	socket = new SockJS(SOCKETURL)
@@ -10,16 +9,9 @@ var Client = function(){
 	socket.onmessage = function(e){
 		$('#output').append(colorReplace(e.data));
 		$('#output').scrollTop($('#output').prop('scrollHeight'));
-
-		var end_of_output = /(\$|>)\s*$/;
-
-		if(end_of_output.test(e.data)){		
-			$('#execute').attr("disabled",false);	
-		};
 	}
 
 	socket.onclose = function(){
-		$('#execute').attr("disabled",true);
 	}
 
 
@@ -27,43 +19,26 @@ var Client = function(){
 		socket.send(command+'\r');
 	}
 
-	socket.kill = function() {
-		socket.send(String.fromCharCode(3));
-	}	
-
-	socket.reset = function() {
-		socket.close()
-		socket = new Client();
-	};
-
 	return socket;	
 }
 
 socket = new Client();
 
 $("#myForm").submit(function(){
-	if($('#execute').is(':disabled') == false){
 		$('#execute').click();
-	};
 });		
 
-//Buttons
-	$("#execute").click(function(){
-		command = $("input[name='command']").val();			
-		socket.execute(command);
-		$("input[name='command']").val('');
-		$('#execute').attr("disabled",true);
-	});
+$("#execute").click(function(){
+	command = $("input[name='command']").val();			
+	socket.execute(command);
+	$("input[name='command']").val('');
+});
 
-	$("#kill").click(function(){
-		socket.kill();
-		$('#execute').attr("disabled",true);
-	});
 
-	$("#reset").click(function(){
-		socket.reset();
-		$('#execute').attr("disabled",true);
-	});
+
+
+
+
 
 
 function colorReplace(input) {

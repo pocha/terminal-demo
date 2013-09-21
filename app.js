@@ -1,4 +1,7 @@
-var Terminal = require ('./lib/Terminal');
+var SockJsServer = require('./lib/SockJsServer'),
+	HttpServer = require('./lib/HttpServer'),
+	Config = require('./lib/Config');
 
-Terminal.listen();
 
+SockJsServer.installHandlers(HttpServer);
+HttpServer.listen(Config.port,Config.host);
